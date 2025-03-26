@@ -1,0 +1,25 @@
+[Unit]
+Description=Flower SuperNode 1 Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+ExecStartPre=-/usr/bin/docker stop supernode-1
+ExecStartPre=-/usr/bin/docker rm supernode-1
+ExecStart=/usr/bin/docker run \
+  --rm \
+  --name supernode-1 \
+  --network flwr-network \
+  -p 9094:9094 \
+  {{ supernode_image }} \
+  --insecure \
+  --superlink superlink:9092 \
+  --node-config "partition-id=0 num-partitions=2" \
+  --clientappio-api-address 0.0.0.0:9094 \
+  --isolation process
+
+ExecStop=/usr/bin/docker stop supernode-1
+
+[Install]
+WantedBy=multi-user.target

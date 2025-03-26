@@ -1,0 +1,32 @@
+---
+- name: Start first SuperNode container
+  community.docker.docker_container:
+    name: supernode-1
+    image: "flwr/supernode:1.17.0"
+    state: started
+    restart_policy: always
+    network_mode: flwr-network
+    ports:
+      - "9094:9094"
+    command: >-
+      --insecure
+      --superlink superlink:9092
+      --node-config "partition-id=0 num-partitions=2"
+      --clientappio-api-address 0.0.0.0:9094
+      --isolation process
+
+- name: Start second SuperNode container
+  community.docker.docker_container:
+    name: supernode-2
+    image: "flwr/supernode:1.17.0"
+    state: started
+    restart_policy: always
+    network_mode: flwr-network
+    ports:
+      - "9095:9095"
+    command: >-
+      --insecure
+      --superlink superlink:9092
+      --node-config "partition-id=1 num-partitions=2"
+      --clientappio-api-address 0.0.0.0:9095
+      --isolation process

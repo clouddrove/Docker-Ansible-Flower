@@ -1,0 +1,5 @@
+---
+- hosts: flowerframework
+  become: true
+  roles:
+    - ansible-docker-flower

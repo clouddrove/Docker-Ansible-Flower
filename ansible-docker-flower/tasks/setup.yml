@@ -1,0 +1,13 @@
+---
+- name: Install Python and Pip
+  apt:
+    name:
+      - python3
+      - python3-pip
+    state: present
+    update_cache: yes
+
+- name: Install flwr CLI
+  pip:
+    name: flwr
+    state: present

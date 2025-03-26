@@ -1,0 +1,5 @@
+---
+flower_project_path: "/opt/flower"
+ansible_user: "ubuntu"
+supernode_image: "flwr/supernode:1.17.0"
+

@@ -1,0 +1,5 @@
+---
+- name: Create Docker network flwr-network
+  community.docker.docker_network:
+    name: flwr-network
+    driver: bridge

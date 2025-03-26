@@ -1,0 +1,70 @@
+---
+- name: Ensure setup.yml exists
+  copy:
+    # content: ""
+    src: setup.yml
+    dest: "/home/ubuntu/setup.yml"
+    force: no
+    mode: '0644'
+  become: true
+
+- name: Ensure network.yml exists
+  copy:
+    # content: ""
+    src: network.yml
+    dest: "/home/ubuntu/network.yml"
+    force: no
+    mode: '0644'
+  become: true
+
+- name: Ensure supernodes.yml exists
+  copy:
+    # content: ""
+    src: supernodes.yml
+    dest: "/home/ubuntu/supernodes.yml"
+    force: no
+    mode: '0644'
+  become: true
+
+- name: Include setup tasks
+  include_tasks: "{{ role_path }}/tasks/setup.yml"
+
+- name: Include network setup
+  include_tasks: "{{ role_path }}/tasks/network.yml"
+
+- name: Include supernode deployment
+  include_tasks: "{{ role_path }}/tasks/supernodes.yml"
+
+- name: Deploy systemd service for SuperNode 1
+  template:
+    src: supernode-1.service.j2
+    dest: "/etc/systemd/system/supernode-1.service"
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_service_mgr == 'systemd'
+  notify: "Reload systemd daemon"
+
+- name: Deploy systemd service for SuperNode 2
+  template:
+    src: supernode-2.service.j2
+    dest: "/etc/systemd/system/supernode-2.service"
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_service_mgr == 'systemd'
+  notify: "Reload systemd daemon"
+
+- name: Enable and start SuperNode 1 service
+  systemd:
+    name: supernode-1
+    enabled: yes
+    state: started
+  when: ansible_service_mgr == 'systemd'
+
+- name: Enable and start SuperNode 2 service
+  systemd:
+    name: supernode-2
+    enabled: yes
+    state: started
+  when: ansible_service_mgr == 'systemd'

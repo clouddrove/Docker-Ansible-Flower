@@ -1,0 +1,28 @@
+---
+- name: Copy systemd service file for supernode-1
+  template:
+    src: supernode-1.service.j2
+    dest: /etc/systemd/system/supernode-1.service
+    mode: "0644"
+
+- name: Copy systemd service file for supernode-2
+  template:
+    src: supernode-2.service.j2
+    dest: /etc/systemd/system/supernode-2.service
+    mode: "0644"
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start supernode-1
+  systemd:
+    name: supernode-1
+    enabled: yes
+    state: started
+
+- name: Enable and start supernode-2
+  systemd:
+    name: supernode-2
+    enabled: yes
+    state: started
